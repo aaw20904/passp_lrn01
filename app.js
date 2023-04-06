@@ -29,7 +29,7 @@ app.post('/register', (req, res) => {
    
   let user = new UserModel({
         username: req.body.username,
-        password: req.body.password
+        password: bcrypt.hashSync( req.body.password, 10),
     })
 
     user.save().then(user => console.log(user)); 

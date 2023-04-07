@@ -1,13 +1,31 @@
+/***11:00 part 4 */
 const express = require('express');
 const bcrypt = require('bcrypt');
+const UserModel= require('./config/database');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
 const app = express();
+app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 
 
-const UserModel= require('./config/database');
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl:'mongodb://localhost:27017/pasp01',
+    collectionName:"sessions",
+  }),
+  cookie: { 
+    maxAge: 1000 * 60 * 60 * 24,  //24 h
+   }
+}))
 
 
-app.set("view engine", "ejs");
+
+
 
 app.get('/login', (req, res) => {
     res.render('login.ejs');
